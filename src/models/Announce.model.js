@@ -22,11 +22,11 @@ const announceSchema = new Schema(
         required: [true, "La date de fin est obligatoire"],
       },
     },
-    PetId: {
+    pet: {
       type: Schema.Types.ObjectId,
       ref: "Pet",
     },
-    UserId: {
+    user: {
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,

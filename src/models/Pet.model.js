@@ -30,7 +30,7 @@ const petSchema = new Schema({
     enum: ["sain", "en rétablissement", "malade"],
     required: [true, "Le statut de santé est obligatoire"],
   },
-  userId: {
+  user: {
     type: Schema.Types.ObjectId,
     ref: "User",
   },

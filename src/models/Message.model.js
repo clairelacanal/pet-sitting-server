@@ -6,11 +6,11 @@ const messageSchema = new Schema(
       type: String,
       maxLength: 1000,
     },
-    AuthorId: {
+    author: {
       type: Schema.Types.ObjectId,
       ref: "User",
     },
-    AnnonceId: {
+    announce: {
       type: Schema.Types.ObjectId,
       ref: "Announce",
     },

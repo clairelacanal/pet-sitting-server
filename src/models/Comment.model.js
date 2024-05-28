@@ -11,7 +11,7 @@ const commentSchema = new Schema(
       min: 0,
       max: 5,
     },
-    authorId: {
+    author: {
       type: Schema.Types.ObjectId,
       ref: "User",
     },
