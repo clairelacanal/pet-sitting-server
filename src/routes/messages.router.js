@@ -9,11 +9,15 @@ const { handleNotFound } = require("../utils");
 router.use(protectionMiddleware);
 
 /* GET Messages listing. */
-router.get("/", async (req, res, next) => {
-  //regarder comment filtrer et recupérer un message
+router.get("/:messageId", async (req, res, next) => {
+  const { messageId } = req.params;
   try {
-    const allMessages = await Message.find({});
-    res.json(allMessages);
+    const message = await Message.findById(messageId);
+    if (message) {
+      res.json(message);
+    } else {
+      res.status(404).send("Message not found");
+    }
   } catch (error) {
     next(error);
   }

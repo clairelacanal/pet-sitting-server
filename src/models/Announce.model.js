@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 
-const announceSchema = new Schema(
+const annonceSchema = new Schema(
   {
     kind: {
       type: String,
@@ -37,5 +37,5 @@ const announceSchema = new Schema(
   }
 );
 
-const Announce = model("Announce", announceSchema);
-module.exports = Announce;
+const Annonce = model("Annonce", annonceSchema);
+module.exports = Annonce;

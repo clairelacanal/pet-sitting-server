@@ -3,7 +3,8 @@ const { Router } = require("express");
 const router = Router();
 
 const protectionMiddleware = require("../middlewares/protection.middleware");
-const Announce = require("../models/Announce.model");
+const Annonce = require("../models/Annonce.model");
+const Pet = require("../models/Pet.model");
 const { handleNotFound } = require("../utils");
 
 router.use(protectionMiddleware);
@@ -11,25 +12,25 @@ router.use(protectionMiddleware);
 /* GET Annonces listing. */
 router.get("/", async (req, res, next) => {
   try {
-    const allAnnounces = await Announce.find();
-    res.json(allAnnounces);
+    const allAnnonces = await Annonce.find();
+    res.json(allAnnonces);
   } catch (error) {
     next(error);
   }
 });
 
 /*GET 1 Annonce */
-router.get("/:announceId", async (req, res, next) => {
-  const { announceId } = req.params;
+router.get("/:annonceId", async (req, res, next) => {
+  const { annonceId } = req.params;
 
   try {
-    const announce = await Announce.findById(announceId);
+    const annonce = await Annonce.findById(annonceId);
 
-    if (!announce) {
+    if (!annonce) {
       handleNotFound(res);
       return;
     }
-    res.json(announce);
+    res.json(annonce);
   } catch (error) {
     next(error);
   }
@@ -40,27 +41,34 @@ router.post("/", async (req, res, next) => {
   try {
     const { kind, description, date, petId } = req.body;
     //faire un check pour vérifier que l'animal appartient à la personne
+    const pet = await Pet.findById(petId);
+    if (!pet) {
+      return res.status(404).send("L'animal n'a pas été trouvé");
+    }
+    if (pet.req.user.id.toString() !== req.user.id.toString()) {
+      return res.status(403).send("L'animal n'appartient pas à l'utilisateur");
+    }
 
-    const createdAnnounce = await Announce.create({
+    const createdAnnonce = await Annonce.create({
       kind,
       description,
       date,
       pet: petId,
       user: req.user.id,
     });
-    res.json(createdAnnounce);
+    res.json(createdAnnonce);
   } catch (error) {
     next(error);
   }
 });
 
 /* PUT Annonce */
-router.put("/:announceId", async (req, res, next) => {
-  const { announceId } = req.params;
+router.put("/:annonceId", async (req, res, next) => {
+  const { annonceId } = req.params;
   const { kind, description, date } = req.body;
   try {
-    const modifiedAnnounce = await Announce.findByIdAndUpdate(
-      announceId,
+    const modifiedAnnonce = await Annonce.findByIdAndUpdate(
+      annonceId,
       {
         kind,
         description,
@@ -70,28 +78,28 @@ router.put("/:announceId", async (req, res, next) => {
         new: true,
       }
     );
-    if (!modifiedAnnounce) {
+    if (!modifiedAnnonce) {
       handleNotFound(res);
       return;
     }
-    res.json(modifiedAnnounce);
+    res.json(modifiedAnnonce);
   } catch (error) {
     next(error);
   }
 });
 
 /* DELETE Annonce */
-router.delete("/:announceId", async (req, res, next) => {
-  const { announceId } = req.params;
+router.delete("/:annonceId", async (req, res, next) => {
+  const { annonceId } = req.params;
 
-  if (!mongoose.isValidObjectId(announceId)) {
+  if (!mongoose.isValidObjectId(annonceId)) {
     handleNotFound(res);
     return;
   }
 
   try {
     if (req.user) {
-      await Announce.findByIdAndDelete({ _id: announceId, user: req.user.id });
+      await Annonce.findByIdAndDelete({ _id: annonceId, user: req.user.id });
     }
     res.sendStatus(204);
   } catch (error) {
