@@ -1,19 +1,21 @@
 const { Schema, model } = require("mongoose");
+//ne pas oublier de checker si j'ai l'un ou l'autre - a ecrire dans la route
 
 const commentSchema = new Schema(
   {
-    Comment: {
+    comment: {
       type: String,
       maxLength: 500,
     },
-    Rate: {
+    rate: {
       type: Number,
-      min: 0,
+      min: 1,
       max: 5,
     },
     author: {
       type: Schema.Types.ObjectId,
       ref: "User",
+      required: true,
     },
   },
   {

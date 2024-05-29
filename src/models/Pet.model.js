@@ -25,7 +25,7 @@ const petSchema = new Schema({
     enum: ["Male", "Femelle"],
     required: [true, "Le genre est obligatoire"],
   },
-  healtStatus: {
+  healthStatus: {
     type: String,
     enum: ["sain", "en rétablissement", "malade"],
     required: [true, "Le statut de santé est obligatoire"],
@@ -33,6 +33,7 @@ const petSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
     ref: "User",
+    required: true,
   },
 });
 
