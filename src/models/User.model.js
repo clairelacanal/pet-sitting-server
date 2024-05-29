@@ -1,9 +1,5 @@
 const { Schema, model } = require("mongoose");
 
-const passwordRegex =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-//"Le mot de passe doit contenir au moins 8 caractères, inclure des lettres majuscules, des lettres minuscules, un chiffre et un caractère spécial",
-
 const userSchema = new Schema(
   {
     photoUser: String,

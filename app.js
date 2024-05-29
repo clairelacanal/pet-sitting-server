@@ -22,8 +22,8 @@ app.use(express.static(path.join(__dirname, "../public")));
 app.use("/users", usersRouter);
 app.use("/pets", petsRouter);
 app.use("/messages", messagesRouter);
-app.use("/commentsRouter", commentsRouter);
-app.use("/annouces", announcesRouter);
+app.use("/", commentsRouter);
+app.use("/announces", announcesRouter);
 
 app.use(catchAll);
 app.use(errorHandler);
