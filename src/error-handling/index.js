@@ -14,7 +14,11 @@ function errorHandler(err, req, res, next) {
     return;
   }
 
-  if (err.message.includes("validation")) {
+  if (err.code === 11000) {
+    res
+      .status(400)
+      .json({ message: `${Object.keys(err.keyPattern)[0]} est déjà utilisé` });
+  } else if (err.message.includes("validation")) {
     res.status(400).json({ message: err.message });
   } else {
     res.status(500).json({ message: "Internal Server Error" });

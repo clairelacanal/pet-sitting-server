@@ -14,9 +14,9 @@ async function protectionMiddleware(req, res, next) {
     }
 
     // verifies the token and returns the payload
-    const { email } = jwt.verify(token, TOKEN_SECRET);
+    const { userName } = jwt.verify(token, TOKEN_SECRET);
 
-    const user = await User.findOne({ email: email }, { password: 0 });
+    const user = await User.findOne({ userName: userName }, { password: 0 });
     if (!user) {
       res.status(404).json({ message: "User Not Found" });
       return;

@@ -10,4 +10,4 @@ const PORT = process.env.PORT || 3000;
 
 const TOKEN_SECRET = process.env.TOKEN_SECRET;
 
-module.exports = { MONGO_URI, PORT, TOKEN_SECRET };
+module.exports = { MONGO_URI, PORT, TOKEN_SECRET, passwordRegex };
