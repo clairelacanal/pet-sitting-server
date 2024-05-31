@@ -39,7 +39,7 @@ router.get("/:annonceId", async (req, res, next) => {
 /* POST Annonce */
 router.post("/", async (req, res, next) => {
   try {
-    const { kind, city, description, date, petId } = req.body;
+    const { kind, photo, city, description, date, petId } = req.body;
     //faire un check pour vérifier que l'animal appartient à la personne
     const pet = await Pet.findById(petId);
     if (!pet) {
@@ -51,6 +51,7 @@ router.post("/", async (req, res, next) => {
 
     const createdAnnonce = await Annonce.create({
       kind,
+      photo,
       city,
       description,
       date,
@@ -66,12 +67,13 @@ router.post("/", async (req, res, next) => {
 /* PUT Annonce */
 router.put("/:annonceId", async (req, res, next) => {
   const { annonceId } = req.params;
-  const { kind, city, description, date } = req.body;
+  const { kind, photo, city, description, date } = req.body;
   try {
     const modifiedAnnonce = await Annonce.findByIdAndUpdate(
       annonceId,
       {
         kind,
+        photo,
         city,
         description,
         date,

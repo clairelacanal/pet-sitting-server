@@ -7,6 +7,10 @@ const annonceSchema = new Schema(
       enum: ["Owner", "Sitter"],
       required: [true, "Veuillez sélectionner un des deux champs"],
     },
+    photo: {
+      type: String,
+      required: [true, "Veuillez télécharger une photo"],
+    },
     city: {
       type: String,
       required: [true, "La ville est obligatoire"],
