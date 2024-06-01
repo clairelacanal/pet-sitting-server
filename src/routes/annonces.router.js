@@ -22,6 +22,10 @@ router.get("/", async (req, res, next) => {
 /*GET 1 Annonce */
 router.get("/:annonceId", async (req, res, next) => {
   const { annonceId } = req.params;
+  if (!mongoose.isValidObjectId(annonceId)) {
+    handleNotFound(res);
+    return;
+  }
 
   try {
     const annonce = await Annonce.findById(annonceId);
@@ -39,14 +43,16 @@ router.get("/:annonceId", async (req, res, next) => {
 /* POST Annonce */
 router.post("/", async (req, res, next) => {
   try {
-    const { kind, photo, city, description, date, petId } = req.body;
+    const { kind, photo, city, description, startDate, endDate, petId } =
+      req.body;
+
     //faire un check pour vérifier que l'animal appartient à la personne
-    const pet = await Pet.findById(petId);
-    if (!pet) {
-      return res.status(404).send("L'animal n'a pas été trouvé");
-    }
-    if (pet.req.user.id.toString() !== req.user.id.toString()) {
-      return res.status(403).send("L'animal n'appartient pas à l'utilisateur");
+    const pet =
+      kind === "Owner"
+        ? await Pet.findOne({ _id: petId, owner: req.user.id })
+        : null;
+    if (kind === "Owner" && !pet) {
+      return res.status(404).json({ message: "L'animal n'a pas été trouvé" });
     }
 
     const createdAnnonce = await Annonce.create({
@@ -54,8 +60,9 @@ router.post("/", async (req, res, next) => {
       photo,
       city,
       description,
-      date,
-      pet: petId,
+      startDate,
+      endDate,
+      pet: pet?.id,
       user: req.user.id,
     });
     res.json(createdAnnonce);
@@ -67,7 +74,7 @@ router.post("/", async (req, res, next) => {
 /* PUT Annonce */
 router.put("/:annonceId", async (req, res, next) => {
   const { annonceId } = req.params;
-  const { kind, photo, city, description, date } = req.body;
+  const { kind, photo, city, description, startDate, endDate } = req.body;
   try {
     const modifiedAnnonce = await Annonce.findByIdAndUpdate(
       annonceId,
@@ -76,7 +83,8 @@ router.put("/:annonceId", async (req, res, next) => {
         photo,
         city,
         description,
-        date,
+        startDate,
+        endDate,
       },
       {
         new: true,

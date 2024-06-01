@@ -21,15 +21,13 @@ const annonceSchema = new Schema(
       required: [true, "La description est obligatoire"],
       maxLength: 1000,
     },
-    date: {
-      startDate: {
-        type: Date,
-        required: [true, "La date de début est obligatoire"],
-      },
-      endDate: {
-        type: Date,
-        required: [true, "La date de fin est obligatoire"],
-      },
+    startDate: {
+      type: Date,
+      required: [true, "La date de début est obligatoire"],
+    },
+    endDate: {
+      type: Date,
+      required: [true, "La date de fin est obligatoire"],
     },
     pet: {
       type: Schema.Types.ObjectId,
