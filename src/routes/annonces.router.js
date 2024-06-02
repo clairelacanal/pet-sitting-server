@@ -9,10 +9,18 @@ const { handleNotFound } = require("../utils");
 
 router.use(protectionMiddleware);
 
-/* GET Annonces listing. */
+/* GET Annonces listing with optional city filtering */
 router.get("/", async (req, res, next) => {
+  const { city } = req.query; // Récupérer le paramètre de requête city
+
   try {
-    const allAnnonces = await Annonce.find();
+    let query = {};
+    if (city) {
+      // Si un paramètre city est fourni, ajouter au critère de recherche
+      query.city = new RegExp(city, "i"); // Utiliser une expression régulière pour la recherche insensible à la casse
+    }
+
+    const allAnnonces = await Annonce.find(query);
     res.json(allAnnonces);
   } catch (error) {
     next(error);
@@ -37,6 +45,25 @@ router.get("/:annonceId", async (req, res, next) => {
     res.json(annonce);
   } catch (error) {
     next(error);
+  }
+});
+
+// Route pour obtenir les annonces par ID utilisateur
+router.get("/user/:userId", async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const annonces = await Annonce.find({ user: userId });
+    if (!annonces) {
+      return res
+        .status(404)
+        .json({ message: "Aucune annonce trouvée pour cet utilisateur" });
+    }
+    res.status(200).json(annonces);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Erreur lors de la récupération des annonces", error });
   }
 });
 
