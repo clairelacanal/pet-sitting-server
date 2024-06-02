@@ -8,7 +8,7 @@ const petSchema = new Schema({
   },
   kind: {
     type: String,
-    enum: ["dog", "cat", "reptile", "bird"],
+    enum: ["chien", "chat", "reptile", "oiseau", "rongeur"],
     required: [true, "Le type d'animal est requis"],
   },
   breed: {

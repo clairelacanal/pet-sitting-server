@@ -9,21 +9,37 @@ const { handleNotFound } = require("../utils");
 
 router.use(protectionMiddleware);
 
-/* GET Annonces listing with optional city filtering */
+/* GET Annonces avec filtre sur la ville et sur les autres filtres */
 router.get("/", async (req, res, next) => {
-  const { city } = req.query; // Récupérer le paramètre de requête city
+  const { city, kind, ageCategory, gender, healthStatus } = req.query; // Récupérer les paramètres de requête
 
   try {
     let query = {};
     if (city) {
-      // Si un paramètre city est fourni, ajouter au critère de recherche
-      query.city = new RegExp(city, "i"); // Utiliser une expression régulière pour la recherche insensible à la casse
+      // Si un paramètre city est fourni, l'ajouter au critère de recherche
+      query.city = new RegExp(city, "i"); // Utiliser une expression régulière pour une recherche insensible à la casse
+    }
+    if (kind) {
+      // Si un paramètre kind est fourni, l'ajouter au critère de recherche
+      query.kind = kind;
+    }
+    if (gender) {
+      // Si un paramètre gender est fourni, l'ajouter au critère de recherche
+      query.gender = gender;
+    }
+    if (healthStatus) {
+      // Si un paramètre healthStatus est fourni, l'ajouter au critère de recherche
+      query.healthStatus = healthStatus;
+    }
+    if (ageCategory) {
+      // Gérer la catégorie d'âge en fonction de la valeur spécifiée
+      query.age = ageCategory === "older" ? { $gt: 5 } : { $lte: 5 };
     }
 
     const allAnnonces = await Annonce.find(query);
     res.json(allAnnonces);
   } catch (error) {
-    next(error);
+    next(error); // Passer à la gestion des erreurs middleware si une exception est levée
   }
 });
 
