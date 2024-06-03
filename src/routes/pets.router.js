@@ -23,12 +23,12 @@ router.get("/pets", async (req, res, next) => {
 /* POST Pet */
 router.post("/pets", async (req, res, next) => {
   try {
-    const { name, photo, kindAnimal, breed, age, gender, healthStatus } =
+    const { name, photoPet, kindAnimal, breed, age, gender, healthStatus } =
       req.body;
 
-    const createdAnnoncePet = await Annonce.create({
+    const createdAnnoncePet = await Pet.create({
       name,
-      photo,
+      photoPet,
       kindAnimal,
       breed,
       age,
