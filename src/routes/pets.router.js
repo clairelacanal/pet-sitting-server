@@ -20,8 +20,30 @@ router.get("/pets", async (req, res, next) => {
   }
 });
 
+/* POST Pet */
+router.post("/pets", async (req, res, next) => {
+  try {
+    const { name, photo, kindAnimal, breed, age, gender, healthStatus } =
+      req.body;
+
+    const createdAnnoncePet = await Annonce.create({
+      name,
+      photo,
+      kindAnimal,
+      breed,
+      age,
+      gender,
+      healthStatus,
+      user: req.user.id,
+    });
+    res.json(createdAnnoncePet);
+  } catch (error) {
+    next(error);
+  }
+});
+
 /*GET 1 Pet */
-router.get("/:petsId", async (req, res, next) => {
+router.get("/pets/:petsId", async (req, res, next) => {
   const { petId } = req.params;
 
   try {

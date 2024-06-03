@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "../public")));
 
 app.use("/users", usersRouter);
-app.use("/pets", petsRouter);
+app.use("/", petsRouter);
 app.use("/messages", messagesRouter);
 app.use("/", commentsRouter);
 app.use("/", annoncesRouter);
