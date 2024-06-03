@@ -10,7 +10,7 @@ const { handleNotFound } = require("../utils");
 router.use(protectionMiddleware);
 
 /* GET Annonces avec filtre sur la ville et sur les autres filtres */
-router.get("/", async (req, res, next) => {
+router.get("/annonces", async (req, res, next) => {
   const { city, kindAnimal, ageCategory, gender, healthStatus } = req.query; // Récupérer les paramètres de requête
 
   try {
@@ -44,7 +44,7 @@ router.get("/", async (req, res, next) => {
 });
 
 /*GET 1 Annonce */
-router.get("/:annonceId", async (req, res, next) => {
+router.get("/annonces/:annonceId", async (req, res, next) => {
   const { annonceId } = req.params;
   if (!mongoose.isValidObjectId(annonceId)) {
     handleNotFound(res);
@@ -65,26 +65,23 @@ router.get("/:annonceId", async (req, res, next) => {
 });
 
 // Route pour obtenir les annonces par ID utilisateur
-router.get("/user/:userId", async (req, res) => {
+router.get("/annonces/user/:userId", async (req, res) => {
   const { userId } = req.params;
 
   try {
     const annonces = await Annonce.find({ user: userId });
     if (!annonces) {
-      return res
-        .status(404)
-        .json({ message: "Aucune annonce trouvée pour cet utilisateur" });
+      handleNotFound(res);
+      return;
     }
-    res.status(200).json(annonces);
+    res.json(annonces);
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Erreur lors de la récupération des annonces", error });
+    next(error);
   }
 });
 
 /* POST Annonce */
-router.post("/", async (req, res, next) => {
+router.post("/annonces", async (req, res, next) => {
   try {
     const { kind, photo, city, description, startDate, endDate, petId } =
       req.body;
@@ -115,7 +112,7 @@ router.post("/", async (req, res, next) => {
 });
 
 /* PUT Annonce */
-router.put("/:annonceId", async (req, res, next) => {
+router.put("/annonces/:annonceId", async (req, res, next) => {
   const { annonceId } = req.params;
   const { kind, photo, city, description, startDate, endDate } = req.body;
   try {
@@ -144,7 +141,7 @@ router.put("/:annonceId", async (req, res, next) => {
 });
 
 /* DELETE Annonce */
-router.delete("/:annonceId", async (req, res, next) => {
+router.delete("/annonces/:annonceId", async (req, res, next) => {
   const { annonceId } = req.params;
 
   if (!mongoose.isValidObjectId(annonceId)) {
@@ -154,9 +151,18 @@ router.delete("/:annonceId", async (req, res, next) => {
 
   try {
     if (req.user) {
-      await Annonce.findByIdAndDelete({ _id: annonceId, user: req.user.id });
+      await Annonce.findOneAndDelete({ _id: annonceId, user: req.user.id });
     }
     res.sendStatus(204);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get("/users/my-profile/annonces", async (req, res, next) => {
+  try {
+    const annonceUser = await Annonce.find({ user: req.user.id });
+    res.json(annonceUser);
   } catch (error) {
     next(error);
   }

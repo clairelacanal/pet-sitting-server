@@ -25,7 +25,7 @@ app.use("/users", usersRouter);
 app.use("/pets", petsRouter);
 app.use("/messages", messagesRouter);
 app.use("/", commentsRouter);
-app.use("/annonces", annoncesRouter);
+app.use("/", annoncesRouter);
 
 app.use(catchAll);
 app.use(errorHandler);

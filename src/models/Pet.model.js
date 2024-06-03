@@ -6,7 +6,7 @@ const petSchema = new Schema({
     type: String,
     required: [true, "Le nom est obligatoire"],
   },
-  kind: {
+  kindAnimal: {
     type: String,
     enum: ["chien", "chat", "reptile", "oiseau", "rongeur"],
     required: [true, "Le type d'animal est requis"],
