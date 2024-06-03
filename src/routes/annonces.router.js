@@ -11,7 +11,7 @@ router.use(protectionMiddleware);
 
 /* GET Annonces avec filtre sur la ville et sur les autres filtres */
 router.get("/", async (req, res, next) => {
-  const { city, kind, ageCategory, gender, healthStatus } = req.query; // Récupérer les paramètres de requête
+  const { city, kindAnimal, ageCategory, gender, healthStatus } = req.query; // Récupérer les paramètres de requête
 
   try {
     let query = {};
@@ -19,9 +19,9 @@ router.get("/", async (req, res, next) => {
       // Si un paramètre city est fourni, l'ajouter au critère de recherche
       query.city = new RegExp(city, "i"); // Utiliser une expression régulière pour une recherche insensible à la casse
     }
-    if (kind) {
+    if (kindAnimal) {
       // Si un paramètre kind est fourni, l'ajouter au critère de recherche
-      query.kind = kind;
+      query.kindAnimal = kindAnimal;
     }
     if (gender) {
       // Si un paramètre gender est fourni, l'ajouter au critère de recherche
