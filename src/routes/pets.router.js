@@ -59,4 +59,23 @@ router.get("/pets/:petsId", async (req, res, next) => {
   }
 });
 
+//Delete 1 pet
+router.delete("/pets/:petId", async (req, res, next) => {
+  const { petId } = req.params;
+
+  if (!mongoose.isValidObjectId(petId)) {
+    handleNotFound(res);
+    return;
+  }
+
+  try {
+    if (req.user) {
+      await Pet.findOneAndDelete({ _id: petId, user: req.user.id });
+    }
+    res.sendStatus(204);
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;
