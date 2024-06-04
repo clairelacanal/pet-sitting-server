@@ -43,7 +43,7 @@ router.post("/pets", async (req, res, next) => {
 });
 
 /*GET 1 Pet */
-router.get("/pets/:petsId", async (req, res, next) => {
+router.get("/pets/:petId", async (req, res, next) => {
   const { petId } = req.params;
 
   try {
