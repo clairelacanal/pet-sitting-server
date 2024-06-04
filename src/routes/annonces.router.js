@@ -36,7 +36,7 @@ router.get("/annonces", async (req, res, next) => {
       query.age = ageCategory === "older" ? { $gt: 5 } : { $lte: 5 };
     }
 
-    const allAnnonces = await Annonce.find(query);
+    const allAnnonces = await Annonce.find(query).populate("pet");
     res.json(allAnnonces);
   } catch (error) {
     next(error); // Passer à la gestion des erreurs middleware si une exception est levée
@@ -83,13 +83,13 @@ router.get("/annonces/user/:userId", async (req, res) => {
 /* POST Annonce */
 router.post("/annonces", async (req, res, next) => {
   try {
-    const { kind, photo, city, description, startDate, endDate, petId } =
-      req.body;
+    const { kind, city, description, startDate, endDate, petId } = req.body;
+    console.log(petId);
 
     //faire un check pour vérifier que l'animal appartient à la personne
     const pet =
       kind === "Owner"
-        ? await Pet.findOne({ _id: petId, owner: req.user.id })
+        ? await Pet.findOne({ _id: petId, user: req.user.id })
         : null;
     if (kind === "Owner" && !pet) {
       return res.status(404).json({ message: "L'animal n'a pas été trouvé" });
@@ -97,7 +97,6 @@ router.post("/annonces", async (req, res, next) => {
 
     const createdAnnonce = await Annonce.create({
       kind,
-      photo,
       city,
       description,
       startDate,
@@ -114,13 +113,12 @@ router.post("/annonces", async (req, res, next) => {
 /* PUT Annonce */
 router.put("/annonces/:annonceId", async (req, res, next) => {
   const { annonceId } = req.params;
-  const { kind, photo, city, description, startDate, endDate } = req.body;
+  const { kind, city, description, startDate, endDate } = req.body;
   try {
     const modifiedAnnonce = await Annonce.findByIdAndUpdate(
       annonceId,
       {
         kind,
-        photo,
         city,
         description,
         startDate,
@@ -161,7 +159,9 @@ router.delete("/annonces/:annonceId", async (req, res, next) => {
 
 router.get("/users/my-profile/annonces", async (req, res, next) => {
   try {
-    const annonceUser = await Annonce.find({ user: req.user.id });
+    const annonceUser = await Annonce.find({ user: req.user.id }).populate(
+      "pet"
+    );
     res.json(annonceUser);
   } catch (error) {
     next(error);
