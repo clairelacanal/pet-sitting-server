@@ -115,8 +115,8 @@ router.put("/annonces/:annonceId", async (req, res, next) => {
   const { annonceId } = req.params;
   const { kind, city, description, startDate, endDate } = req.body;
   try {
-    const modifiedAnnonce = await Annonce.findByIdAndUpdate(
-      annonceId,
+    const modifiedAnnonce = await Annonce.findOneAndUpdate(
+      { _id: annonceId, user: req.user.id },
       {
         kind,
         city,
