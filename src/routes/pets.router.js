@@ -12,7 +12,7 @@ router.use(protectionMiddleware);
 router.get("/pets", async (req, res, next) => {
   try {
     if (req.user) {
-      const allPets = await Pet.find();
+      const allPets = await Pet.find({ user: req.user.id });
       res.json(allPets);
     }
   } catch (error) {
