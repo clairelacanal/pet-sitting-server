@@ -5,10 +5,6 @@ const cors = require("cors");
 
 const { PORT } = require("./src/consts");
 
-app.get("/", (req, res) => {
-  res.status(200).json({ message: "Server is running smoothly" });
-});
-
 const usersRouter = require("./src/routes/users.router");
 const petsRouter = require("./src/routes/pets.router");
 const messagesRouter = require("./src/routes/messages.router");
@@ -25,6 +21,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "../public")));
 
+app.get("/", (req, res) => {
+  res.status(200).json({ message: "Server is running smoothly" });
+});
 app.use("/users", usersRouter);
 app.use("/", petsRouter);
 app.use("/messages", messagesRouter);
