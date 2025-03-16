@@ -5,6 +5,9 @@ const User = require("../models/User.model");
 
 async function protectionMiddleware(req, res, next) {
   try {
+    if (req.path === "/") {
+      return next(); // Skip authentication for root route
+    }
     // token is sent in the headers as `Bearer <token>`
     const token = req.headers.authorization?.split(" ")[1];
 
