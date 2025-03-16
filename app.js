@@ -5,6 +5,10 @@ const cors = require("cors");
 
 const { PORT } = require("./src/consts");
 
+app.get("/", (req, res) => {
+  res.status(200).json({ message: "Server is running smoothly" });
+});
+
 const usersRouter = require("./src/routes/users.router");
 const petsRouter = require("./src/routes/pets.router");
 const messagesRouter = require("./src/routes/messages.router");
